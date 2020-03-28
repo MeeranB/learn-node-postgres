@@ -2,18 +2,16 @@
   "name": "learn-node-postgres",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "workshop/server.js",
   "dependencies": {
     "dotenv": "^8.2.0",
     "nodemon": "^2.0.2",
-    "pg": "^7.18.2",
-    "tap-spec": "^5.0.0",
-    "tape": "^4.13.2"
+    "pg": "^7.18.2"
   },
   "devDependencies": {},
   "scripts": {
-    "dev": "nodemon solution/server/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon workshop/server.js",
+    "solution": "nodemon solution/server.js"
   },
   "keywords": [],
   "author": "Oliver Phillips <hello@oliverjam.es> (https://oliverjam.es/)",
