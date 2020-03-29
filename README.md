@@ -157,7 +157,7 @@ Install both dependencies:
 npm install pg dotenv
 ```
 
-Create a new file `workshop/database/connect.js`. We'll put all the code related to database connection in here. That way we don't have to repeat it every time we want to send a query.
+Create a new file `workshop/database/connection.js`. We'll put all the code related to database connection in here. That way we don't have to repeat it every time we want to send a query.
 
 First import both libraries we just installed:
 
