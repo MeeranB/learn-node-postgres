@@ -250,7 +250,7 @@ function home(request, response) {
 }
 ```
 
-Refresh the page and you should see an unordered list containing each user's first name.
+Refresh the page and you should see an unordered list containing each user's first name. We're currently over-querying our users table: we only need the `username` column for our current UI. For very big data sets this could be a performance problem. Amend your query so it only returns the column we need.
 
 ## Updating the database
 

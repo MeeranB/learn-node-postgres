@@ -1,7 +1,7 @@
 const db = require("./database/connection");
 
 function home(request, response) {
-  db.query("SELECT * FROM users").then(result => {
+  db.query("SELECT username FROM users").then(result => {
     const users = result.rows;
     // create a list item for each user in the array
     const userList = users.map(user => `<li>${user.username}</li>`);
