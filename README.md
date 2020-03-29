@@ -49,6 +49,8 @@ Unfortunately there's nothing inside our database yet. We need to write some SQL
 
 ## Initialising your database
 
+Let's write some SQL to put some initial data into our database. Create a directory called `database` inside `workshop/`. Create a file called `init.sql` inside the `database/` directory. We can write our initialisation commands here.
+
 First we create a "transaction". This is a block of SQL that will run in order, saving the result only if everything was successful. This avoids ending up with partially updated (broken) data if the commands fail halfway through. We start a transaction with `BEGIN;` and end it with `COMMIT;`.
 
 ```sql
