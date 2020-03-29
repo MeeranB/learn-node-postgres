@@ -23,7 +23,7 @@ createdb learn_node_postgres
 (you can name it anything you like). We can connect to this to check it worked. Run `psql` to enter the Postgres CLI, then run:
 
 ```sh
-\connecet learn_node_postgres
+\connect learn_node_postgres
 ```
 
 Unfortunately there's nothing inside our database yet. We need to write some SQL that creates our tables and populates them with example data for us to use. We're going to create two tables: `users` and `blog_posts`. Each blog post will have a `user_id` relation pointing to whichever user wrote the post.
