@@ -26,7 +26,7 @@ function createUser(request, response) {
     const data = Object.fromEntries(searchParams);
     console.log(data); // e.g. { username: "oli", ... }
     response.writeHead(200, { "content-type": "text/html" });
-    response.end(`<h1>Thanks for submitted</h1>`);
+    response.end(`<h1>Thanks for submitting</h1>`);
   });
 }
 

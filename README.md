@@ -282,6 +282,8 @@ We use `$1`, `$2` etc as placeholders, then pass our values in an array as the s
 
 Edit the `createUser` handler function to use a parameterized query to save the submitted user data in the database. Don't forget to add a `.catch` to your query promise in case something goes wrong.
 
+Your handler should redirect back to the homepage once the user has been successfully created.
+
 ## Stretch: relational data
 
 So far we've only touched the `users` table. Create a new endpoint on your server for `/all-posts`. This route should display a list of all the posts in your database, **and the username of each post's author**.
