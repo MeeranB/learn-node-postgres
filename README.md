@@ -34,10 +34,14 @@ CREATE USER myuser WITH PASSWORD 'mypassword';
 
 **Important**: if you're setting up a live production database your password should be a 25+ character random string. For our local dev one it's fine to use something short and memorable.
 
-Then we give the user permissions for this database:
+Then we give the user permissions for this database and all its tables:
 
 ```sh
 GRANT ALL PRIVILEGES ON DATABASE learn_node_postgres TO myuser;
+```
+
+```sh
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO myuser;
 ```
 
 This gives the new user _only_ permissions for this one database. This is good security: if the user account is compromised the attacker will only have access to a single database instead of all of them.
