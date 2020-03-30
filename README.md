@@ -26,6 +26,22 @@ createdb learn_node_postgres
 \connect learn_node_postgres
 ```
 
+We should also create a new user with access to this database. It's a good idea for each database to have a unique user so one password getting compromised doesn't affect all your databases.
+
+```sh
+CREATE USER myuser WITH PASSWORD 'mypassword';
+```
+
+**Important**: if you're setting up a live production database your password should be a 25+ character random string. For our local dev one it's fine to use something short and memorable.
+
+Then we give the user permissions for this database:
+
+```sh
+GRANT ALL PRIVILEGES ON blog_workshop TO myuser;
+```
+
+This gives the new user _only_ permissions for this one database. This is good security: if the user account is compromised the attacker will only have access to a single database instead of all of them.
+
 Unfortunately there's nothing inside our database yet. We need to write some SQL that creates our tables and populates them with example data for us to use. We're going to create two tables: `users` and `blog_posts`. Each blog post will have a `user_id` relation pointing to whichever user wrote the post.
 
 ### Schemas
@@ -175,13 +191,15 @@ const dotenv = require("dotenv");
 dotenv.config();
 ```
 
-By default `dotenv` looks for a file named `.env` at the root of your project. Create this now. We need to set some environment variables that tell `node-postgres` how to connect to our database. It will use the Postgres defaults for most things, but we'll need to at least tell it the name of the database:
+By default `dotenv` looks for a file named `.env` at the root of your project. Create this now. We need to set some environment variables that tell `node-postgres` how to connect to our database. It will use the Postgres defaults for most things, but we'll need to at least tell it the name of the database, our user and their password:
 
 ```sh
 PGDATABASE=blog_workshop
+PGUSER=myuser
+PGPASSWORD=mypassword
 ```
 
-If you created a user/password for your database or changed the port it runs on you'll need to set extra environment variables for them here. You can see [all the options](https://node-postgres.com/features/connecting#Environment%20variables) (including defaults) in the docs.
+If you changed the port your database runs on (or any other defaults) you'll need to set extra environment variables for them here. You can see [all the options](https://node-postgres.com/features/connecting#Environment%20variables) (including defaults) in the docs.
 
 ### Connections pools
 
