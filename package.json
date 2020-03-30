@@ -15,5 +15,6 @@
   },
   "keywords": [],
   "author": "Oliver Phillips <hello@oliverjam.es> (https://oliverjam.es/)",
+  "private": true,
   "license": "ISC"
 }
