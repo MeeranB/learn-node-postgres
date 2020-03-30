@@ -37,7 +37,7 @@ CREATE USER myuser WITH PASSWORD 'mypassword';
 Then we give the user permissions for this database:
 
 ```sh
-GRANT ALL PRIVILEGES ON DATABASE blog_workshop TO myuser;
+GRANT ALL PRIVILEGES ON DATABASE learn_node_postgres TO myuser;
 ```
 
 This gives the new user _only_ permissions for this one database. This is good security: if the user account is compromised the attacker will only have access to a single database instead of all of them.
@@ -194,7 +194,7 @@ dotenv.config();
 By default `dotenv` looks for a file named `.env` at the root of your project. Create this now. We need to set some environment variables that tell `node-postgres` how to connect to our database. It will use the Postgres defaults for most things, but we'll need to at least tell it the name of the database, our user and their password:
 
 ```sh
-PGDATABASE=blog_workshop
+PGDATABASE=learn_node_postgres
 PGUSER=myuser
 PGPASSWORD=mypassword
 ```
