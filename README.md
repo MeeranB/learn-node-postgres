@@ -37,7 +37,7 @@ CREATE USER myuser WITH PASSWORD 'mypassword';
 Then we give the user permissions for this database:
 
 ```sh
-GRANT ALL PRIVILEGES ON blog_workshop TO myuser;
+GRANT ALL PRIVILEGES ON DATABASE blog_workshop TO myuser;
 ```
 
 This gives the new user _only_ permissions for this one database. This is good security: if the user account is compromised the attacker will only have access to a single database instead of all of them.
