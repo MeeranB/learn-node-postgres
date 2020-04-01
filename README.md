@@ -12,39 +12,33 @@ Before you begin make sure you have [installed Postgres](https://github.com/maci
 
 The server inside `workshop/server.js` should start on http://localhost:3000. Load this in your browser to make sure everything is working—you should see "hello world".
 
-## Creating your database
+## Creating your local database
 
-First we need to create a database. We can do this in our terminal:
+We'll be using the `psql` Postgres command-line utility. You can enter SQL commands in two ways: either as a string like `psql -c "MY SQL COMMAND"` or you can enter the CLI by running just `psql`, then running commands in there.
 
-```sh
-createdb learn_node_postgres
-```
-
-(you can name it anything you like). We can connect to this to check it worked. Run `psql` to enter the Postgres CLI, then run:
+First we need to create a new database user:
 
 ```sh
-\connect learn_node_postgres
+psql -c "CREATE USER myuser WITH PASSWORD 'mypassword'"
 ```
 
-We should also create a new user with access to this database. It's a good idea for each database to have a unique user so one password getting compromised doesn't affect all your databases.
+then make that user a "superuser" (with access to all tables you end up creating):
 
 ```sh
-CREATE USER myuser WITH PASSWORD 'mypassword';
+psql -c "ALTER USER myuser WITH SUPERUSER"
 ```
 
-**Important**: if you're setting up a live production database your password should be a 25+ character random string. For our local dev one it's fine to use something short and memorable.
-
-Then we give the user permissions for this database and all its tables:
+then create a new database owned by that user:
 
 ```sh
-GRANT ALL PRIVILEGES ON DATABASE learn_node_postgres TO myuser;
+psql -c "CREATE DATABASE learn_node_postgres WITH OWNER myuser"
 ```
+
+You can connect to this database with:
 
 ```sh
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO myuser;
+psql learn_node_postgres
 ```
-
-This gives the new user _only_ permissions for this one database. This is good security: if the user account is compromised the attacker will only have access to a single database instead of all of them.
 
 Unfortunately there's nothing inside our database yet. We need to write some SQL that creates our tables and populates them with example data for us to use. We're going to create two tables: `users` and `blog_posts`. Each blog post will have a `user_id` relation pointing to whichever user wrote the post.
 
