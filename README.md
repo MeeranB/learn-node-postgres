@@ -144,64 +144,117 @@ to view the tables.
 
 ## Connecting to your database
 
-We need to tell our Node server how to connect to our database. We'll be using [`node-postgres`](https://node-postgres.com/), which is a library for connecting to and querying a PostgreSQL database. We'll also be using `dotenv`, a library for accessing environment variables in Node.
-
-Install both dependencies:
+We need to tell our Node server how to send requests to our database. [`node-postgres`](https://node-postgres.com/) is a library for connecting to and querying a PostgreSQL database.
 
 ```sh
-npm install pg dotenv
+npm install pg
 ```
 
 Create a new file `workshop/database/connection.js`. We'll put all the code related to database connection in here. That way we don't have to repeat it every time we want to send a query.
 
-First import both libraries we just installed:
+First import the library we just installed:
 
 ```js
 const pg = require("pg");
-const dotenv = require("dotenv");
 ```
 
-Then load all environment variables using `dotenv`'s `config` method:
+We need to tell `pg` where our database is, and what user to log in as. We need something called a "connection string". This is a URL in the following format:
+
+```
+postgres://username:password@localhost:5432/database_name
+```
+
+For our specific database it will look like this:
+
+```
+postgres://myuser:mypassword@localhost:5432/learn_node_postgres
+```
+
+Create a new variable in your `connection.js` file containing this string:
 
 ```js
 const pg = require("pg");
-const dotenv = require("dotenv");
 
-dotenv.config();
+const connectionString =
+  "postgres://myuser:mypassword@localhost:5432/learn_node_postgres";
 ```
 
-By default `dotenv` looks for a file named `.env` at the root of your project. Create this now. We need to set some environment variables that tell `node-postgres` how to connect to our database. It will use the Postgres defaults for most things, but we'll need to at least tell it the name of the database, our user and their password:
-
-```sh
-PGDATABASE=learn_node_postgres
-PGUSER=myuser
-PGPASSWORD=mypassword
-```
-
-If you changed the port your database runs on (or any other defaults) you'll need to set extra environment variables for them here. You can see [all the options](https://node-postgres.com/features/connecting#Environment%20variables) (including defaults) in the docs.
-
-### Connections pools
+### Making a connection
 
 We're going to create a "pool" of connections for our server to use. This is better for performance than continually connecting and disconnecting from the database. The server will reuse connections from the pool as it receives requests.
 
 ```js
 const pg = require("pg");
-const dotenv = require("dotenv");
 
-dotenv.config();
+const connectionString =
+  "postgres://myuser:mypassword@localhost:5432/learn_node_postgres";
 
-const db = new pg.Pool();
+const db = new pg.Pool({ connectionString });
 
 module.exports = db;
 ```
 
+`pg.Pool` takes a config object, which needs to include the `connectionString` to tell it which database to connect to.
+
 We also export the pool object so we can reuse it in other files.
 
-That's it for connecting—we can now query our database to make sure it works.
+Let's send a quick query to make sure everything is working. We can use the `query` method of our pool object to send SQL commands to the database. It takes a SQL string as the first argument and returns a promise. This promise resolves when the query result is ready.
 
-## Querying the database
+```js
+const pg = require("pg");
 
-We can use the `query` method of our pool object to send SQL commands to the database. It takes a SQL string as the first argument and returns a promise. This promise resolves when the query result is ready.
+const connectionString =
+  "postgres://myuser:mypassword@localhost:5432/learn_node_postgres";
+
+const db = new pg.Pool({ connectionString });
+
+db.query("SELECT * FROM USERS").then((result) => console.log(result));
+
+module.exports = db;
+```
+
+Run this file from your terminal with `node workshop/database/connection.js` and you should hopefully see some data logged.
+
+## Environment variables
+
+So far we've hard-coded our database connection string into our JS code. This works, but isn't an ideal solution. It means anyone who ever wants to run our code has to have the exact same user, password and database configured on their machine. We also have no way of using a different database for testing or when we deploy our server to Heroku.
+
+A better solution is to read the connection string from an "environment variable". That way different environments can pass in different values.
+
+We'll use a library called `dotenv` for this. It will read values from a file named `.env`, then make them available to your JS code as `process.env.MY_VARIABLE`.
+
+First install `dotenv`:
+
+```sh
+npm install dotenv
+```
+
+Then create a new file named `.env` at the root of the project. We can set the variable we need like this:
+
+```sh
+DATABASE_URL='postgres://myuser:mypassword@localhost:5432/learn_node_postgres'
+```
+
+Then we can tell `dotenv` to load all environment variables at the top of our `connection.js` file:
+
+```js
+const pg = require("pg");
+const dotenv = require("dotenv");
+
+dotenv.config();
+```
+
+We can now access any values from our `.env` file. Change the connection string variable to read the new environment variable:
+
+```js
+const connectionString = process.env.DATABASE_URL;
+```
+
+Everything should still be working the same. You can test by running this file from your terminal with `node workshop/database/connection.js` and you should hopefully see some data logged.
+
+## Using our database
+
+Now our server knows how to talk to our database we can start using it in our handlers. First let's make our home route list all the users in the database.
 
 Open `workshop/handlers.js` and add a query to the `home` function:
 
@@ -209,7 +262,7 @@ Open `workshop/handlers.js` and add a query to the `home` function:
 const db = require("./database/connection");
 
 function home(request, response) {
-  db.query("SELECT * FROM users").then(result => {
+  db.query("SELECT * FROM users").then((result) => {
     console.log(result);
   });
   response.writeHead(200, { "content-type": "text/html" });
@@ -236,10 +289,10 @@ Now that we have access to the database in our server handlers we can start send
 const db = require("./database/connection");
 
 function home(request, response) {
-  db.query("SELECT * FROM users").then(result => {
+  db.query("SELECT * FROM users").then((result) => {
     const users = result.rows;
     // create a list item for each user in the array
-    const userList = users.map(user => `<li>${user.username}</li>`);
+    const userList = users.map((user) => `<li>${user.username}</li>`);
     response.writeHead(200, { "content-type": "text/html" });
     // use .join to turn the array into a string
     response.end(`<ul>${userList.join("")}</ul>`);
