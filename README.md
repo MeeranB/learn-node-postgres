@@ -14,30 +14,30 @@ The server inside `workshop/server.js` should start on http://localhost:3000. Lo
 
 ## Creating your local database
 
-We'll be using the `psql` Postgres command-line utility. You can enter SQL commands in two ways: either as a string like `psql -c "MY SQL COMMAND"` or you can enter the CLI by running just `psql`, then running commands in there.
+Type `psql` in your terminal to enter the Postgres command-line interface. You can type `ctrl-d` to exit this at any time. You can enter SQL commands here.
 
-First we need to create a new database user:
+First we need to create a new database user for our app. It's more secure to have a dedicated user per application,rather than reusing your personal admin user.
 
-```sh
-psql -c "CREATE USER myuser WITH PASSWORD 'mypassword'"
+```sql
+CREATE USER myuser WITH PASSWORD 'mypassword';
 ```
 
-then make that user a "superuser" (with access to all tables you end up creating):
+Then make that user a "superuser" (with access to all tables you end up creating):
 
-```sh
-psql -c "ALTER USER myuser WITH SUPERUSER"
+```sql
+ALTER USER myuser WITH SUPERUSER;
 ```
 
-then create a new database owned by that user:
+Finally create a new database owned by the new user:
 
-```sh
-psql -c "CREATE DATABASE learn_node_postgres WITH OWNER myuser"
+```sql
+CREATE DATABASE learn_node_postgres WITH OWNER myuser;
 ```
 
-You can connect to this database with:
+You can connect to this new database with:
 
-```sh
-psql learn_node_postgres
+```sql
+\connect learn_node_postgres
 ```
 
 Unfortunately there's nothing inside our database yet. We need to write some SQL that creates our tables and populates them with example data for us to use. We're going to create two tables: `users` and `blog_posts`. Each blog post will have a `user_id` relation pointing to whichever user wrote the post.
@@ -108,26 +108,9 @@ CREATE TABLE blog_posts (
 COMMIT;
 ```
 
-Finally we need to put some example data into the tables so we can experiment with the database. In a production database you probably wouldn't do this. We can use `INSERT INTO` to add data to a table:
+Finally we need to put some example data into the tables so we can experiment with the database. In a production database you probably wouldn't do this. We can use `INSERT INTO` to add data to a table. Add these lines to your file before the `COMMIT`:
 
 ```sql
-BEGIN;
-
-DROP TABLE IF EXISTS users, blog_posts CASCADE;
-
-CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  username VARCHAR(255) NOT NULL,
-  age INTEGER,
-  location VARCHAR(255)
-);
-
-CREATE TABLE blog_posts (
-  id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id),
-  text_content TEXT
-);
-
 INSERT INTO users (username, age, location) VALUES
   ('Sery1976', 28, 'Middlehill, UK'),
   ('Notne1991', 36, 'Sunipol, UK'),
@@ -143,8 +126,6 @@ INSERT INTO blog_posts (text_content, user_id) VALUES
   ('Curabitur arcu quam, imperdiet ac orci ac.', 4),
   ('Aenean blandit risus sed pellentesque.', 5)
 ;
-
-COMMIT;
 ```
 
 To test that this works you can run `psql` to start the Postgres CLI, then run the `init.sql` file:
