@@ -128,7 +128,7 @@ INSERT INTO blog_posts (text_content, user_id) VALUES
 ;
 ```
 
-To test that this works you can run `psql` to start the Postgres CLI, then run the `init.sql` file:
+To test that this works you can run `psql learn_node_postgres` to start the Postgres CLI and connect to your database, then run the `init.sql` file:
 
 ```sh
 \include workshop/database/init.sql
@@ -140,7 +140,7 @@ Your database tables should be created and populated. You can verify this by run
 \dt
 ```
 
-to view the tables.
+You should see the `users` and `blog_posts` tables listed.
 
 ## Connecting to your database
 
