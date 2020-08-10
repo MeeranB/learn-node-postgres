@@ -35,19 +35,13 @@ createdb $(whoami)
 
 </details>
 
-First we need to create a new database user for our app. It's more secure to have a dedicated user per application,rather than reusing your personal admin user.
+First we need to create a new database user for our app. It's more secure to have a dedicated user per application, rather than reusing your personal admin user.
 
 ```sql
-CREATE USER myuser WITH PASSWORD 'mypassword';
+CREATE ROLE myuser SUPERUSER PASSWORD 'mypassword';
 ```
 
-Then make that user a "superuser" (with access to all tables you end up creating):
-
-```sql
-ALTER USER myuser WITH SUPERUSER;
-```
-
-Finally create a new database owned by the new user:
+Then create a new database owned by the new user:
 
 ```sql
 CREATE DATABASE learn_node_postgres WITH OWNER myuser;
