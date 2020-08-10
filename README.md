@@ -16,6 +16,25 @@ The server inside `workshop/server.js` should start on http://localhost:3000. Lo
 
 Type `psql` in your terminal to enter the Postgres command-line interface. You can type `ctrl-d` to exit this at any time. You can enter SQL commands here.
 
+<details>
+<summary>If you get an error</summary>
+
+If you get an error like:
+
+```sh
+psql: error: could not connect to server: FATAL: database "oliver" does not exist
+```
+
+This happens because `psql` by default tries to connect to a database with the same name as your user account. You can fix it by creating the default database it needs with:
+
+```sh
+createdb $(whoami)
+```
+
+`whoami` will insert your username automatically.
+
+</details>
+
 First we need to create a new database user for our app. It's more secure to have a dedicated user per application,rather than reusing your personal admin user.
 
 ```sql
