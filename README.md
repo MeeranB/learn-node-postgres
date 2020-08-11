@@ -38,7 +38,7 @@ createdb $(whoami)
 First we need to create a new database user for our app. It's more secure to have a dedicated user per application, rather than reusing your personal admin user.
 
 ```sql
-CREATE ROLE myuser SUPERUSER PASSWORD 'mypassword';
+CREATE USER myuser SUPERUSER PASSWORD 'mypassword';
 ```
 
 Then create a new database owned by the new user:
